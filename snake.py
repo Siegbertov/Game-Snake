@@ -142,3 +142,33 @@ class Game:
         self.draw_snake()
         self.draw_grid()
         pygame.display.update()
+
+
+def main():
+    newGame = Game()
+    while newGame.run:
+        pygame.time.delay(80)
+        clock.tick(10)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP and not newGame.newSnake.head_direction == newGame.newSnake.DOWN:
+                    newGame.newSnake.head_direction = newGame.newSnake.UP
+                elif event.key == pygame.K_DOWN and not newGame.newSnake.head_direction == newGame.newSnake.UP:
+                    newGame.newSnake.head_direction = newGame.newSnake.DOWN
+                elif event.key == pygame.K_RIGHT and not newGame.newSnake.head_direction == newGame.newSnake.LEFT:
+                    newGame.newSnake.head_direction = newGame.newSnake.RIGHT
+                elif event.key == pygame.K_LEFT and not newGame.newSnake.head_direction == newGame.newSnake.RIGHT:
+                    newGame.newSnake.head_direction = newGame.newSnake.LEFT
+                elif event.key == pygame.K_SPACE:
+                    print(newGame.all_possible_positions())
+
+        newGame.check_lose()
+        newGame.move_snake()
+        newGame.redraw_screen()
+
+
+if __name__ == '__main__':
+    main()
