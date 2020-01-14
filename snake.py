@@ -39,8 +39,11 @@ class Game:
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
+    BLUE = (0, 0, 255)
     GREEN = (0, 255, 0)
     DARK_GREEN = (0, 200, 0)
+    text_font = pygame.font.Font("freesansbold.ttf", 20)
+
     ROW_NUM = 20
 
     def __init__(self):
@@ -73,6 +76,7 @@ class Game:
                     return True
         return False
 
+    # YOU CAN YOU THIS IF YOU WANT PLAY WITH BORDERS
     def snake_hits_border(self):
         r, c = self.newSnake.body[0].position[0], self.newSnake.body[0].position[1]
         if r<0 or r>self.ROW_NUM-1 or c<0 or c>self.ROW_NUM-1:
@@ -98,13 +102,23 @@ class Game:
     def next_position_of_head(self):
         r, c = self.newSnake.body[0].position[0], self.newSnake.body[0].position[1]
 
+        # YOU CAN DELETE checker for r and c IF YOU WANT PLAY WITH BORDERS
+
         if self.newSnake.head_direction == self.newSnake.UP:
+            if r == 0:
+                r = 20
             return [r-1, c]
         if self.newSnake.head_direction == self.newSnake.DOWN:
+            if r == 19:
+                r = -1
             return [r+1, c]
         if self.newSnake.head_direction == self.newSnake.RIGHT:
+            if c == 19:
+                c = -1
             return [r, c+1]
         if self.newSnake.head_direction == self.newSnake.LEFT:
+            if c == 0:
+                c = 20
             return [r, c-1]
 
     def move_snake(self):
@@ -115,6 +129,12 @@ class Game:
                 self.newSnake.body.pop()
 
     # TODO                                                                                                      DRAWING
+    def draw_score(self):
+        score_text = "Score: " + str(len(self.newSnake.body))
+        text_surf = self.text_font.render(score_text, True, self.BLACK)
+        text_rect = text_surf.get_rect()
+        self.screen.blit(text_surf, text_rect)
+
     def draw_food(self):
         r, c = self.newFood.position[0], self.newFood.position[1]
         w = self.ceil_size//2
@@ -141,10 +161,11 @@ class Game:
         self.draw_food()
         self.draw_snake()
         self.draw_grid()
+        self.draw_score()
         pygame.display.update()
 
 
-def main():
+def main_loop():
     newGame = Game()
     while newGame.run:
         pygame.time.delay(80)
@@ -162,8 +183,6 @@ def main():
                     newGame.newSnake.head_direction = newGame.newSnake.RIGHT
                 elif event.key == pygame.K_LEFT and not newGame.newSnake.head_direction == newGame.newSnake.RIGHT:
                     newGame.newSnake.head_direction = newGame.newSnake.LEFT
-                elif event.key == pygame.K_SPACE:
-                    print(newGame.all_possible_positions())
 
         newGame.check_lose()
         newGame.move_snake()
@@ -171,4 +190,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main_loop()
